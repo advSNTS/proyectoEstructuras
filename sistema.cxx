@@ -10,6 +10,7 @@ Sistema::Sistema(){
 void Sistema::cargar_imagen(std::string nombre){
     std::ifstream archivo(nombre);
     if(!archivo.is_open()){
+        std::cout<<"La imagen no ha podido ser cargada. No existe el archivo o no está en el directorio actual."<<std::endl;
         return;
     }
     std::stringstream imagen;
@@ -22,7 +23,7 @@ void Sistema::cargar_imagen(std::string nombre){
     getline(imagen, tipo);
     std::cout<<"Tipo: '"<<tipo<<"'"<<std::endl;
     if(tipo != "P2" && tipo != "P3"){
-        std::cout<<"Solo se recibe formato P2 o P3";
+        std::cout<<"La imagen no ha podido ser cargada. Solo se recibe formato P2 o P3";
         return;
     }
 
@@ -35,7 +36,7 @@ void Sistema::cargar_imagen(std::string nombre){
     int ancho, altura;
     std::stringstream flujo(linea);
     flujo >> ancho >> altura;
-    std::cout<<"A y A"<<ancho<<" "<<altura<<std::endl;
+    std::cout<<"Ancho y Aaltura: "<<ancho<<", "<<altura<<std::endl;
     
     while (getline(imagen, linea)) {
         if (linea.empty() || linea[0] != '#') {
@@ -53,11 +54,11 @@ void Sistema::cargar_imagen(std::string nombre){
 
     for(int i=0; i<altura; i++){
         if(!getline(imagen, linea)){
-            std::cout<<"Error: El archivo no tiene las lineas mencionadas";
+            std::cout<<"La imagen no ha podido ser cargada. El archivo no tiene las lineas mencionadas"<<std::endl;
             return;
         }
         if (linea.empty()) {
-            std::cerr << "Error: Línea vacía en la fila " << i + 1 << std::endl;
+            std::cout <<"La imagen no ha podido ser cargada. Línea vacía en la fila " << i + 1 << std::endl;
             return;
         }
         std::vector<int> subvec;
@@ -67,7 +68,7 @@ void Sistema::cargar_imagen(std::string nombre){
             int k;
             mat>>k;
             if(k>m_valor){
-                std::cout<<"Error: se encontró un valor mayor al m_valor"<<std::endl;
+                std::cout<<"La imagen no ha podido ser cargada. Se encontró un valor mayor al m_valor"<<std::endl;
                 return;
             }
             subvec.push_back(k);
@@ -83,6 +84,7 @@ void Sistema::cargar_imagen(std::string nombre){
     }
     std::cout<<std::endl;
     */
+   std::cout<<"La imagen '"<<nombre<<"' ha sido cargada."<<std::endl;
     Imagen i(ancho, altura, m_valor, nombre, vec);
     this->imagen = i;
     this->imagenCargara = true;

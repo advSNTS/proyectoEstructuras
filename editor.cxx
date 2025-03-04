@@ -38,8 +38,13 @@ int main(){
                     std::cout<<"La imagen nombre_imagen.pgm no ha podido ser cargada. Falta argumento 1"<<std::endl;
                 }
                 else{
-                    std::cout<<"La imagen :"<<comando<<": ha sido cargada."<<std::endl;
-                    sistema.cargar_imagen(comando);
+                    if(comando.find(' ')!=std::string::npos){
+                        std::cout<<"La imagen no ha podido ser cargada. Hay mas de un argumento, o existe un espacio demás."<<std::endl;
+                    }
+                    else{
+                        std::cout<<"Cargando imagen '"<<comando<<"'..."<<std::endl;
+                        sistema.cargar_imagen(comando);
+                    }
                 }
             } 
         } else if(comando.find("cargar_volumen")!=std::string::npos && comando.find("cargar_volumen")==0){
