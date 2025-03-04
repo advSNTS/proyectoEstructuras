@@ -62,6 +62,7 @@ int main(){
                         std::cout<<"El volumenha sido cargado."<<std::endl;
                         std::cout<<"nombre_base:"<<arg1<<":"<<std::endl;
                         std::cout<<"n_im:"<<comando<<":"<<std::endl; //el argumento 2 queda almacenado en comando
+                        sistema.cargar_volumen(arg1, std::stoi(comando));
                     }
                     
                 }

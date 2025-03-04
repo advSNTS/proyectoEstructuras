@@ -11,7 +11,7 @@ public:
     Sistema();
     void cargar_imagen(std::string nombre);
     void info_imagen();
-    void cargar_volumen();
+    void cargar_volumen(std::string nombre, int n_im);
     void info_volumen();
 };
 

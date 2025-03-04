@@ -93,8 +93,15 @@ void Sistema::info_imagen(){
     this->imagen.mostrar();
 }
 
-void Sistema::cargar_volumen(){
-
+void Sistema::cargar_volumen(std::string nombre, int n_im){
+    if(n_im>99){
+        std::cout<<"El número máximo de imagenes es 99"<<std::endl;
+    }
+    for (int i = 1; i <= n_im; i++)
+    {
+        std::cout<<i<<std::endl;
+    }
+    
 }
 
 void Sistema::info_volumen(){
