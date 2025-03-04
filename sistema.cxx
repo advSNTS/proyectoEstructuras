@@ -92,3 +92,11 @@ void Sistema::info_imagen(){
     std::cout<<"Imagen cargada en memoria: "<<std::endl;
     this->imagen.mostrar();
 }
+
+void Sistema::cargar_volumen(){
+
+}
+
+void Sistema::info_volumen(){
+
+}
