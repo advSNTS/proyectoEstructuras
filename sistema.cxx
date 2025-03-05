@@ -73,7 +73,7 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
 
     for (int i = 0; i < altura; i++) {
         for (int j = 0; j < ancho; j++) {
-            if (!(imagen >> pixel)) { // Leer un solo valor de la imagen
+            if (!(imagen >> pixel)) { 
                 std::cout << "Error al leer píxeles. El archivo no tiene suficientes valores." << std::endl;
                 return;
             }
@@ -81,7 +81,7 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
                 std::cout << "La imagen no ha podido ser cargada. Se encontró un valor mayor a m_valor." << std::endl;
                 return;
             }
-            vec[i][j] = pixel; // Guardar correctamente el pixel en la matriz
+            vec[i][j] = pixel;
         }
     }
     /*
