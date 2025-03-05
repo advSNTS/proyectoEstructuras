@@ -1,5 +1,6 @@
 #include "imagen.h"
 #include <iostream>
+#include <fstream>
 Imagen::Imagen(){
 
 }
@@ -21,3 +22,20 @@ void Imagen::mostrar(){
         std::cout<<std::endl;
     }
 }
+
+/*
+void Imagen::imprimir() {
+    std::ofstream salida("salida.pgm");
+    for (std::vector<std::vector<int>>::iterator it = this->imagen.begin(); it != this->imagen.end(); ++it) {
+        std::vector<int>::iterator eso = it->begin();
+        if (eso != it->end()) { 
+            salida << *eso; 
+            ++eso;
+        }
+        for (; eso != it->end(); ++eso) {
+            salida << " " << *eso; 
+        }
+        salida << std::endl;
+    }
+}
+*/

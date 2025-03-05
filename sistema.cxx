@@ -68,30 +68,21 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
     flujo>>m_valor;
     std::cout<<"M_valor: "<<m_valor<<std::endl;
 
-    std::vector<std::vector<int>> vec;
+    std::vector<std::vector<int>> vec(altura, std::vector<int>(ancho)); 
+    int pixel;
 
-    for(int i=0; i<altura; i++){
-        if(!getline(imagen, linea)){
-            std::cout<<"La imagen no ha podido ser cargada. El archivo no tiene las lineas mencionadas"<<std::endl;
-            return;
-        }
-        if (linea.empty()) {
-            std::cout <<"La imagen no ha podido ser cargada. Línea vacía en la fila " << i + 1 << std::endl;
-            return;
-        }
-        std::vector<int> subvec;
-        std::istringstream mat(linea);
-
-        for(int j = 0; j<ancho; j++){
-            int k;
-            mat>>k;
-            if(k>m_valor){
-                std::cout<<"La imagen no ha podido ser cargada. Se encontró un valor mayor al m_valor"<<std::endl;
+    for (int i = 0; i < altura; i++) {
+        for (int j = 0; j < ancho; j++) {
+            if (!(imagen >> pixel)) { // Leer un solo valor de la imagen
+                std::cout << "Error al leer píxeles. El archivo no tiene suficientes valores." << std::endl;
                 return;
             }
-            subvec.push_back(k);
+            if (pixel > m_valor) {
+                std::cout << "La imagen no ha podido ser cargada. Se encontró un valor mayor a m_valor." << std::endl;
+                return;
+            }
+            vec[i][j] = pixel; // Guardar correctamente el pixel en la matriz
         }
-        vec.push_back(subvec);
     }
     /*
     for(std::vector<std::vector<int>>::iterator it = vec.begin(); it != vec.end(); it++){
@@ -126,6 +117,7 @@ void Sistema::info_imagen(){
     }
     std::cout<<"Imagen cargada en memoria: "<<std::endl;
     this->imagen.mostrar();
+    //this->imagen.imprimir();
 }
 
 void Sistema::cargar_volumen(std::string nombre, int n_im){
