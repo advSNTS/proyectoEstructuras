@@ -10,6 +10,8 @@ private:
     bool volumenCargado;
     Imagen imagen;
     Volumen volumen;
+    int anchoControlVolumen;
+    int altoControlVolumen;
 public:
     Sistema();
     void cargar_imagen(std::string nombre, bool volumen);
