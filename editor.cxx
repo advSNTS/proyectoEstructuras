@@ -43,7 +43,7 @@ int main(){
                     }
                     else{
                         std::cout<<"Cargando imagen '"<<comando<<"'..."<<std::endl;
-                        sistema.cargar_imagen(comando);
+                        sistema.cargar_imagen(comando, false);
                     }
                 }
             } 

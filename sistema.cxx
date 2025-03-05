@@ -7,7 +7,7 @@ Sistema::Sistema(){
     this->imagenCargara = false;
 }
 
-void Sistema::cargar_imagen(std::string nombre){
+void Sistema::cargar_imagen(std::string nombre, bool volumen){
     std::ifstream archivo(nombre);
     if(!archivo.is_open()){
         std::cout<<"La imagen no ha podido ser cargada. No existe el archivo o no está en el directorio actual."<<std::endl;
@@ -98,12 +98,29 @@ void Sistema::info_imagen(){
 void Sistema::cargar_volumen(std::string nombre, int n_im){
     if(n_im>99){
         std::cout<<"El número máximo de imagenes es 99"<<std::endl;
+        return;
     }
-    for (int i = 1; i <= n_im; i++)
-    {
-        std::cout<<i<<std::endl;
+    if(n_im<1){
+        std::cout<<"El volumen no pudo ser cargado. El número minimo de imagenes es 1"<<std::endl;
+        return;
     }
-    
+    if(nombre.find('.')==std::string::npos){
+        std::cout<<"El volumen no pudo ser cargado. Falta la extension '.' del archivo"<<std::endl;
+    }
+    std::string nombreBase = nombre.substr(0, nombre.find('.'));
+    std::string extension = nombre.substr(nombre.find('.'));
+    std::cout<<nombreBase<<std::endl<<extension<<std::endl;
+    std::string archivo = "";
+    for(int i=1; i<n_im+1; i++){
+        if(i<10){ //se debe concatenar el 0;
+            archivo = nombreBase + '0' + std::to_string(i) + extension;
+        }
+        else{
+            archivo = nombreBase + std::to_string(i) + extension;
+        }
+        std::cout<<archivo<<std::endl;
+
+    }
 }
 
 void Sistema::info_volumen(){

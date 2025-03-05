@@ -9,7 +9,7 @@ private:
     std::vector<Imagen> volumen;
     int cuenta;
 public:
-    Volumen(/* args */);
+    Volumen();
     void agregarImagen(Imagen imagen);
 
 };
