@@ -6,7 +6,8 @@
 class Sistema
 {
 private:
-    bool imagenCargara;
+    bool imagenCargada;
+    bool volumenCargado;
     Imagen imagen;
     Volumen volumen;
 public:

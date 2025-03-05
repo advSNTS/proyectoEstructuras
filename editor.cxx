@@ -73,7 +73,7 @@ int main(){
                 }
             }
         } else if(comando.find("info_volumen")!=std::string::npos && comando.find("info_volumen")==0){
-            std::cout<<"Volumen cargado en memoria: nombre_base , tamaño: n_im , ancho: W , alto: H  "<<std::endl;
+            sistema.info_volumen();
         } else if(comando.find("info_imagen")!=std::string::npos && comando.find("info_imagen")==0){
             sistema.info_imagen();
         } else if(comando.find("proyeccion2D")!=std::string::npos && comando.find("proyeccion2D")==0){

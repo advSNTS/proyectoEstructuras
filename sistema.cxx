@@ -4,13 +4,14 @@
 #include <sstream>
 
 Sistema::Sistema(){
-    this->imagenCargara = false;
+    this->imagenCargada = false;
+    this->volumenCargado = false;
 }
 
 void Sistema::cargar_imagen(std::string nombre, bool volumen){
     std::ifstream archivo(nombre);
     if(!archivo.is_open()){
-        std::cout<<"La imagen no ha podido ser cargada. No existe el archivo o no está en el directorio actual."<<std::endl;
+        std::cout<<"La imagen no ha podido ser cargada. No existe el archivo"<<nombre<<" o no está en el directorio actual."<<std::endl;
         return;
     }
     std::stringstream imagen;
@@ -84,11 +85,21 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
     }
     std::cout<<std::endl;
     */
-   std::cout<<"La imagen '"<<nombre<<"' ha sido cargada."<<std::endl;
+    if(!volumen){
+        std::cout<<"La imagen '"<<nombre<<"' ha sido cargada."<<std::endl;
+    }
     Imagen i(ancho, altura, m_valor, nombre, vec);
-    this->imagen = i;
-    this->imagenCargara = true;
+    if(!volumen){
+        this->imagen = i;
+        this->imagenCargada = true;
+    }
+    if(volumen){
+        this->volumen.agregarImagen(i);
+        this->volumenCargado = true;
+    }
 }
+
+
 
 void Sistema::info_imagen(){
     std::cout<<"Imagen cargada en memoria: "<<std::endl;
@@ -118,11 +129,11 @@ void Sistema::cargar_volumen(std::string nombre, int n_im){
         else{
             archivo = nombreBase + std::to_string(i) + extension;
         }
-        std::cout<<archivo<<std::endl;
+        cargar_imagen(archivo, true);
 
     }
 }
 
 void Sistema::info_volumen(){
-
+    this->volumen.infoVolumen();
 }

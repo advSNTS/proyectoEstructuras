@@ -11,7 +11,7 @@ private:
 public:
     Volumen();
     void agregarImagen(Imagen imagen);
-
+    void infoVolumen();
 };
 
 #endif
