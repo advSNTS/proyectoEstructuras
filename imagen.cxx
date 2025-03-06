@@ -23,7 +23,7 @@ void Imagen::mostrar(){
     }
 }
 
-/*
+
 void Imagen::imprimir() {
     std::ofstream salida("salida.pgm");
     for (std::vector<std::vector<int>>::iterator it = this->imagen.begin(); it != this->imagen.end(); ++it) {
@@ -38,4 +38,23 @@ void Imagen::imprimir() {
         salida << std::endl;
     }
 }
-*/
+
+int Imagen::getAlto(){
+    return this->alto;
+}
+
+int Imagen::getAncho(){
+    return this->ancho;
+}
+
+const std::vector<std::vector<int>>& Imagen::getImagen() const{
+    return this->imagen;
+}
+
+int Imagen::getAltoConstante() const{
+    return this->alto;
+}
+
+int Imagen::getAnchoConstante() const{
+    return this->ancho;
+}

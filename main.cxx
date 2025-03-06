@@ -102,6 +102,7 @@ int main(){
                             std::cout<<"direccion :"<<direccion<<":"<<std::endl
                             <<"criterio :"<<criterio<<":"<<std::endl
                             <<"archivo :"<<comando<<":"<<std::endl;
+                            sistema.proyeccion2D(direccion[0], criterio, comando);
                         }
                     }
 

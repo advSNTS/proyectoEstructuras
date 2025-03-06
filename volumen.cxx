@@ -16,3 +16,11 @@ void Volumen::infoVolumen(){
         std::cout<<std::endl<<"-----------------------"<<std::endl;
     }
 }
+
+int Volumen::getCuenta(){
+    return this->cuenta;
+}
+
+const std::vector<Imagen>& Volumen::getVolumen() const{
+    return this->volumen;
+}

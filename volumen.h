@@ -12,6 +12,8 @@ public:
     Volumen();
     void agregarImagen(Imagen imagen);
     void infoVolumen();
+    int getCuenta();
+    const std::vector<Imagen>& getVolumen() const;
 };
 
 #endif

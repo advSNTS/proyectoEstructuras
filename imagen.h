@@ -15,6 +15,11 @@ public:
     Imagen();
     void imprimir();
     void mostrar();
+    int getAlto();
+    int getAncho();
+    int getAltoConstante() const;
+    int getAnchoConstante() const;
+    const std::vector<std::vector<int>>& getImagen() const;
 };
 
 

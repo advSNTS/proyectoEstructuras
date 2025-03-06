@@ -117,7 +117,7 @@ void Sistema::info_imagen(){
     }
     std::cout<<"Imagen cargada en memoria: "<<std::endl;
     this->imagen.mostrar();
-    //this->imagen.imprimir();
+    this->imagen.imprimir();
 }
 
 void Sistema::cargar_volumen(std::string nombre, int n_im){
@@ -156,4 +156,65 @@ void Sistema::info_volumen(){
         return;
     }
     this->volumen.infoVolumen();
+}
+
+void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nombreArchivo){
+    if(!this->volumenCargado){
+        std::cout<<"El volumen aun no ha sido cargado."<<std::endl;
+    }
+
+
+    int p = volumen.getCuenta();
+    int n = volumen.getVolumen()[0].getAltoConstante();
+    int m = volumen.getVolumen()[0].getAnchoConstante();
+
+    std::vector<std::vector<int>> resultado;
+
+    if(direccion=='z'){
+        resultado.resize(n, std::vector<int>(m, 0));
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                std::vector<int> valores;
+                for (int k = 0; k < p; ++k) {
+                    valores.push_back(volumen.getVolumen()[k].getImagen()[i][j]);
+                }
+                resultado[i][j] = aplCriterio(valores, criterio);
+            }
+        }
+    }
+    guardarArchivo(nombreArchivo, resultado);
+
+}
+
+
+int Sistema::aplCriterio(std::vector<int>& valores, std::string criterio){
+    if (criterio == "minimo") {
+        int minimo = valores[0];
+        for (size_t i = 1; i < valores.size(); ++i) {
+            if (valores[i] < minimo) {
+                minimo = valores[i];
+            }
+        }
+        return minimo;
+    }
+    return 0;
+}
+
+void Sistema::guardarArchivo(std::string nombre, std::vector<std::vector<int>>& imagen){
+    std::ofstream archivo(nombre);
+    if(!archivo.is_open()){
+        std::cout<<"Error en el guardado del volumen.";
+        return;
+    }
+    int filas = imagen.size();
+    int columnas = imagen[0].size();
+    archivo << "P2\n" << columnas << " " << filas << "\n255\n";
+    for (const auto& fila : imagen) {
+        for (int pixel : fila) {
+            archivo << pixel << " ";
+        }
+        archivo << "\n";
+    }
+    archivo.close();
 }
