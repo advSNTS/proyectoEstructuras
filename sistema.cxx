@@ -125,15 +125,15 @@ void Sistema::cargar_volumen(std::string nombre, int n_im){
         std::cout<<"Un volumen ya fue cargado y este será sobreescrito."<<std::endl;
     }
     if(n_im>99){
-        std::cout<<"El número máximo de imagenes es 99"<<std::endl;
+        std::cout<<"La proyección 2D del volumen en memoria no ha podido ser generada. El número máximo de imagenes es 99"<<std::endl;
         return;
     }
     if(n_im<1){
-        std::cout<<"El volumen no pudo ser cargado. El número minimo de imagenes es 1"<<std::endl;
+        std::cout<<"La proyección 2D del volumen en memoria no ha podido ser generada.. El número minimo de imagenes es 1"<<std::endl;
         return;
     }
     if(nombre.find('.')==std::string::npos){
-        std::cout<<"El volumen no pudo ser cargado. Falta la extension '.' del archivo"<<std::endl;
+        std::cout<<"La proyección 2D del volumen en memoria no ha podido ser generada. Falta la extension '.' del archivo"<<std::endl;
     }
     std::string nombreBase = nombre.substr(0, nombre.find('.'));
     std::string extension = nombre.substr(nombre.find('.'));

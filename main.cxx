@@ -102,7 +102,13 @@ int main(){
                             std::cout<<"direccion :"<<direccion<<":"<<std::endl
                             <<"criterio :"<<criterio<<":"<<std::endl
                             <<"archivo :"<<comando<<":"<<std::endl;
-                            sistema.proyeccion2D(direccion[0], criterio, comando);
+                            if(direccion.size()>1){
+                                std::cout<<"La proyección 2D del volumen en memoria no ha podido ser generada. La dirección solo puede tener 1 caracter; x, y o z"<<std::endl;
+                            }
+                            else{
+                                sistema.proyeccion2D(direccion[0], criterio, comando);
+                            }
+                            
                         }
                     }
 
