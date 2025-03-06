@@ -14,13 +14,15 @@ Imagen::Imagen(int ancho, int alto, int m_pixel, std::string nombreArchivo, std:
 }
 
 void Imagen::mostrar(){
-    std::cout<<this->nombreArchivo<<"   Ancho: "<<this->ancho<<". Alto: "<<this->alto<<". M_pixel: "<<this->m_pixel<<std::endl<<". Imagen: "<<std::endl;
+    std::cout<<this->nombreArchivo<<"   Ancho: "<<this->ancho<<". Alto: "<<this->alto<<". M_pixel: "<<this->m_pixel<<std::endl;
+    /*
     for(std::vector<std::vector<int>>::iterator it = this->imagen.begin(); it != this->imagen.end(); it++){
         for(std::vector<int>::iterator eso = it->begin(); eso != it->end(); eso++){
             std::cout<<*eso<<" ";
         }
         std::cout<<std::endl;
     }
+    */
 }
 
 

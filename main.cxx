@@ -98,7 +98,7 @@ int main(){
                             std::cout<<"La proyección 2D del volumen en memoria no ha podido ser generada. Falta argumento 3"<<std::endl;
                         }
                         else{
-                            std::cout<<"La proyección 2D del volumen en memoria ha sido generada."<<std::endl;
+                            std::cout<<"Generando proyeccion 2D..."<<std::endl;
                             std::cout<<"direccion :"<<direccion<<":"<<std::endl
                             <<"criterio :"<<criterio<<":"<<std::endl
                             <<"archivo :"<<comando<<":"<<std::endl;

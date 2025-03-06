@@ -117,7 +117,7 @@ void Sistema::info_imagen(){
     }
     std::cout<<"Imagen cargada en memoria: "<<std::endl;
     this->imagen.mostrar();
-    this->imagen.imprimir();
+    //this->imagen.imprimir();
 }
 
 void Sistema::cargar_volumen(std::string nombre, int n_im){
@@ -148,6 +148,7 @@ void Sistema::cargar_volumen(std::string nombre, int n_im){
         }
         cargar_imagen(archivo, true);
     }
+    volumen.setNombreBase(nombre);
 }
 
 void Sistema::info_volumen(){
@@ -264,7 +265,7 @@ int Sistema::aplCriterio(std::vector<int>& valores, std::string criterio){
 void Sistema::guardarArchivo(std::string nombre, std::vector<std::vector<int>>& imagen){
     std::ofstream archivo(nombre);
     if(!archivo.is_open()){
-        std::cout<<"Error en el guardado del volumen.";
+        std::cout<<"Error en el guardado de la proyección.";
         return;
     }
     int filas = imagen.size();
@@ -281,5 +282,6 @@ void Sistema::guardarArchivo(std::string nombre, std::vector<std::vector<int>>& 
         }
         archivo << "\n";
     }
+    std::cout<<"La proyeccion 2D ha sido generada en el archivo '"<<nombre<<"'"<<std::endl;
     archivo.close();
 }
