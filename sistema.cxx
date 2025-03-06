@@ -74,11 +74,11 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
     for (int i = 0; i < altura; i++) {
         for (int j = 0; j < ancho; j++) {
             if (!(imagen >> pixel)) { 
-                std::cout << "Error al leer píxeles. El archivo no tiene suficientes valores." << std::endl;
+                std::cout << "Error al leer píxeles. El archivo '"<<nombre<<"' no tiene suficientes valores." << std::endl;
                 return;
             }
             if (pixel > m_valor) {
-                std::cout << "La imagen no ha podido ser cargada. Se encontró un valor mayor a m_valor." << std::endl;
+                std::cout << "La imagen no ha podido ser cargada. En el archivo "<<nombre<<" se encontró un valor mayor a m_valor." << std::endl;
                 return;
             }
             vec[i][j] = pixel;
@@ -161,6 +161,7 @@ void Sistema::info_volumen(){
 void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nombreArchivo){
     if(!this->volumenCargado){
         std::cout<<"El volumen aun no ha sido cargado."<<std::endl;
+        return;
     }
 
 
@@ -173,13 +174,25 @@ void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nom
     if(direccion=='z'){
         resultado.resize(n, std::vector<int>(m, 0));
 
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 std::vector<int> valores;
-                for (int k = 0; k < p; ++k) {
+                for (int k = 0; k < p; k++) {
                     valores.push_back(volumen.getVolumen()[k].getImagen()[i][j]);
                 }
                 resultado[i][j] = aplCriterio(valores, criterio);
+            }
+        }
+    }
+    else if(direccion=='x'){ //proy. sobre columnas
+        resultado.resize(n, std::vector<int>(p, 0));
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < p; k++) { 
+                std::vector<int> valores;
+                for (int j = 0; j < m; j++) { 
+                    valores.push_back(volumen.getVolumen()[k].getImagen()[i][j]);
+                }
+                resultado[i][k] = aplCriterio(valores, criterio);
             }
         }
     }
@@ -191,15 +204,33 @@ void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nom
 int Sistema::aplCriterio(std::vector<int>& valores, std::string criterio){
     if (criterio == "minimo") {
         int minimo = valores[0];
-        for (size_t i = 1; i < valores.size(); ++i) {
+        for (unsigned int i = 1; i < valores.size(); i++) {
             if (valores[i] < minimo) {
                 minimo = valores[i];
             }
         }
         return minimo;
     }
+    else if (criterio == "maximo") {
+        int maximo = valores[0];
+        for (unsigned int i = 1; i < valores.size(); i++) {
+            if (valores[i] > maximo) {
+                maximo = valores[i];
+            }
+        }
+        return maximo;
+    }
+    else if (criterio == "promedio") {
+        int suma = 0;
+        for (unsigned int i = 0; i < valores.size(); i++) {
+            suma += valores[i];
+        }
+        return suma / valores.size(); 
+    }
+
     return 0;
 }
+
 
 void Sistema::guardarArchivo(std::string nombre, std::vector<std::vector<int>>& imagen){
     std::ofstream archivo(nombre);
@@ -210,9 +241,14 @@ void Sistema::guardarArchivo(std::string nombre, std::vector<std::vector<int>>& 
     int filas = imagen.size();
     int columnas = imagen[0].size();
     archivo << "P2\n" << columnas << " " << filas << "\n255\n";
-    for (const auto& fila : imagen) {
-        for (int pixel : fila) {
-            archivo << pixel << " ";
+    for (std::vector<std::vector<int>>::iterator itFila = imagen.begin(); itFila != imagen.end(); ++itFila) {
+        std::vector<int>::iterator itPixel = itFila->begin();
+        if (itPixel != itFila->end()) {
+            archivo << *itPixel;
+            itPixel++;
+        }
+        for (; itPixel != itFila->end(); ++itPixel) {
+            archivo << " " << *itPixel; 
         }
         archivo << "\n";
     }
