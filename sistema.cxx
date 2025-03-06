@@ -171,7 +171,7 @@ void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nom
 
     std::vector<std::vector<int>> resultado;
 
-    if(direccion=='z'){
+    if(direccion=='z'){ //proy. de frente
         resultado.resize(n, std::vector<int>(m, 0));
 
         for (int i = 0; i < n; i++) {
@@ -193,6 +193,19 @@ void Sistema::proyeccion2D(char direccion, std::string criterio, std::string nom
                     valores.push_back(volumen.getVolumen()[k].getImagen()[i][j]);
                 }
                 resultado[i][k] = aplCriterio(valores, criterio);
+            }
+        }
+    }
+    else if (direccion == 'y') { //vista desde arriba
+        resultado.resize(p, std::vector<int>(m, 0)); 
+    
+        for (int k = 0; k < p; ++k) {  
+            for (int j = 0; j < m; ++j) {  
+                std::vector<int> valores;
+                for (int i = 0; i < n; ++i) {  
+                    valores.push_back(volumen.getVolumen()[k].getImagen()[i][j]);
+                }
+                resultado[k][j] = aplCriterio(valores, criterio); 
             }
         }
     }
@@ -221,13 +234,29 @@ int Sistema::aplCriterio(std::vector<int>& valores, std::string criterio){
         return maximo;
     }
     else if (criterio == "promedio") {
-        int suma = 0;
+        unsigned int suma = 0;
         for (unsigned int i = 0; i < valores.size(); i++) {
             suma += valores[i];
         }
         return suma / valores.size(); 
+    }else if (criterio == "mediana") {
+        std::vector<int> copia = valores;
+        for (unsigned int i = 0; i < copia.size() - 1; ++i) {
+            for (unsigned int j = i + 1; j < copia.size(); ++j) {
+                if (copia[j] < copia[i]) {
+                    int temp = copia[i];
+                    copia[i] = copia[j];
+                    copia[j] = temp;
+                }
+            }
+        }
+        unsigned int mitad = copia.size() / 2;
+        if (copia.size() % 2 == 0) {
+            return (copia[mitad - 1] + copia[mitad]) / 2;
+        } else {
+            return copia[mitad];
+        }
     }
-
     return 0;
 }
 
