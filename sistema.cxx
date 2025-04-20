@@ -15,6 +15,9 @@ void Sistema::cargar_imagen(std::string nombre, bool volumen){
     std::ifstream archivo(nombre);
     if(!archivo.is_open()){
         std::cout<<"La imagen no ha podido ser cargada. No existe el archivo '"<<nombre<<"' o no está en el directorio actual."<<std::endl;
+        if(volumen){
+            this->volumenCargado = false;
+        }
         return;
     }
     std::stringstream imagen;
