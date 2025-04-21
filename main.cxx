@@ -158,6 +158,7 @@ int main(){
                 if(comando.size()==0){
                     std::cout<<"La imagen no ha podido ser codificada. Falta arg 1"<<std::endl;
                 }else{
+                    sistema.codificarImagen(comando);
                     std::cout<<"La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo '"<<comando<<"'"<<std::endl;
                 }
             }

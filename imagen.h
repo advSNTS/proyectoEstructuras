@@ -22,5 +22,4 @@ public:
     const std::vector<std::vector<int>>& getImagen() const;
 };
 
-
 #endif

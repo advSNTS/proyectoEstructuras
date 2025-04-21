@@ -2,11 +2,30 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <map>
 
 Sistema::Sistema(){
     this->imagenCargada = false;
     this->volumenCargado = false;
 }
+
+void Sistema::codificarImagen(std::string nombre){
+    if(!this->imagenCargada){
+        std::cout<<"No existe una imagen cargada en memoria."<<std::endl;
+        return;
+    }
+    const std::vector<std::vector<int>> ima = this->imagen.getImagen();
+    std::map<int, int> histograma;
+    for(std::vector<std::vector<int>>::const_iterator it = ima.begin(); it != ima.end(); it++){
+        for(std::vector<int>::const_iterator eso = it->begin(); eso!= it->end(); eso++){
+            histograma[*eso]++;
+        }
+    }
+    for (const auto& par : histograma) {
+        std::cout << "Valor: " << par.first << " aparece " << par.second << " veces\n";
+    }
+}
+
 
 void Sistema::cargar_imagen(std::string nombre, bool volumen){
     if(!volumen && this->imagenCargada){
