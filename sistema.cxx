@@ -106,7 +106,7 @@ void Sistema::codificarImagen(std::string nombre){
     }
 
     archivo.close();
-    std::cout << "Imagen codificada exitosamente en " << nombre << std::endl; // Mensaje de éxito
+    std::cout << "Imagen codificada exitosamente en " << nombre << std::endl;
 }
 
 void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
@@ -124,7 +124,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
     archivo.read(reinterpret_cast<char*>(&M), sizeof(M));
 
     if (!archivo) {
-         std::cout << "Error leyendo la cabecera del archivo " << archivohuff << std::endl;
+         std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< archivohuff << std::endl;
          archivo.close();
          return;
     }
@@ -134,14 +134,14 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
         unsigned long frecuencia;
         archivo.read(reinterpret_cast<char*>(&frecuencia), sizeof(unsigned long));
         if (!archivo) {
-             std::cout << "Error leyendo frecuencias del archivo " << archivohuff << std::endl;
+             std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< archivohuff << std::endl;
              archivo.close();
              return;
         }
         if (frecuencia > 0) {
             histograma[i] = static_cast<int>(frecuencia);
             if (histograma[i] < 0) {
-                 std::cout << "Advertencia: Frecuencia potencialmente desbordada para el valor " << i << std::endl;
+                 std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar." << i << std::endl;
             }
         }
     }
@@ -149,7 +149,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
     unsigned int cantidadBits = 0;
     archivo.read(reinterpret_cast<char*>(&cantidadBits), sizeof(cantidadBits));
      if (!archivo) {
-         std::cout << "Error leyendo la cantidad de bits del archivo " << archivohuff << std::endl;
+         std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< archivohuff << std::endl;
          archivo.close();
          return;
      }
@@ -157,7 +157,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
     ArbolHuffman arbol;
     arbol.construirDesdeHistograma(histograma);
     if (arbol.getRaiz() == nullptr && !histograma.empty()) { 
-         std::cout << "Error: No se pudo construir el árbol de Huffman." << std::endl;
+         std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< std::endl;
          archivo.close();
          return;
     }
@@ -181,11 +181,6 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
         if (bitsLeidos >= cantidadBits) break;
     }
 
-    if (bitsLeidos < cantidadBits) {
-        std::cout << "Advertencia: Se esperaban " << cantidadBits << " bits, pero solo se pudieron desempaquetar " << bitsLeidos << "." << std::endl;
-    }
-
-
     std::vector<int> pixeles;
     int totalPixeles = static_cast<int>(W) * static_cast<int>(H);
     pixeles.reserve(totalPixeles);
@@ -198,7 +193,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
                  pixeles.push_back(actual->getValor());
              }
         } else {
-             std::cout << "Error: Imagen con un solo color pero el histograma no coincide." << std::endl;
+             std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar." << std::endl;
              return;
         }
 
@@ -211,7 +206,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
             }
 
             if (actual == nullptr) {
-                std::cout << "Error: Se encontró un camino inválido en el árbol de Huffman durante la decodificación." << std::endl;
+                std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar." << std::endl;
                 return;
             }
 
@@ -225,13 +220,13 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
             }
         }
     } else if (totalPixeles > 0) {
-         std::cout << "Error: Raíz del árbol de Huffman es nula para una imagen no vacía." << std::endl;
+         std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< std::endl;
          return;
     }
 
 
     if (pixeles.size() != totalPixeles) {
-        std::cout << "Error: Se decodificaron " << pixeles.size() << " píxeles, pero se esperaban " << totalPixeles << "." << std::endl;
+        std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar." << totalPixeles << "." << std::endl;
         return;
     }
 
