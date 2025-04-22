@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <cstdint>
 
 Sistema::Sistema(){
     this->imagenCargada = false;
@@ -24,6 +25,17 @@ void Sistema::codificarImagen(std::string nombre){
     for (const auto& par : histograma) {
         std::cout << "Valor: " << par.first << " aparece " << par.second << " veces\n";
     }
+    ArbolHuffman arbolHuffman;
+    arbolHuffman.construirDesdeHistograma(histograma);
+
+    std::map<int, std::string> codigos;
+    arbolHuffman.generarCodigos(codigos);
+
+    std::cout << "Códigos de Huffman:" << std::endl;
+    for (const auto& par : codigos) {
+        std::cout << "Valor: " << par.first << " -> Código: " << par.second << std::endl;
+    }
+    
 }
 
 

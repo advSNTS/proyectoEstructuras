@@ -25,6 +25,9 @@ void Imagen::mostrar(){
     */
 }
 
+int Imagen::getMpixel(){
+    return this->m_pixel;
+}
 
 void Imagen::imprimir() {
     std::ofstream salida("salida.pgm");

@@ -2,6 +2,7 @@
 #define SISTEMA_H
 #include "imagen.h"
 #include "volumen.h"
+#include "ArbolHuffman.h"
 #include <iostream>
 class Sistema
 {
@@ -23,6 +24,5 @@ public:
     void guardarArchivo(std::string nombre, std::vector<std::vector<int>>& imagen);
     void codificarImagen(std::string nombre);
 };
-
 
 #endif

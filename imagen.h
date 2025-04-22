@@ -17,9 +17,9 @@ public:
     void mostrar();
     int getAlto();
     int getAncho();
+    int getMpixel();
     int getAltoConstante() const;
     int getAnchoConstante() const;
     const std::vector<std::vector<int>>& getImagen() const;
 };
-
 #endif
