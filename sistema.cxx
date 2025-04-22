@@ -232,7 +232,7 @@ void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
 
     std::ofstream salida(nombrepgm);
     if (!salida.is_open()) {
-        std::cout << "El archivo "<< nombrepgm <<" no ha podido ser creado para escribir."<< std::endl; // Mejor mensaje
+        std::cout << "El archivo "<< nombrepgm <<" no ha podido ser creado para escribir."<< std::endl; 
         return;
     }
 
