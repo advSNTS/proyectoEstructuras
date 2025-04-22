@@ -60,8 +60,9 @@ void ArbolHuffman::generarCodigosRec(NodoHuffman* nodo, const std::string& camin
         return;
     }
 
-    if(nodo->getFrecuencia()>0){
-        codigos[nodo->getValor()]=camino;
+    if(nodo->getIzquierdo() == nullptr && nodo->getDerecho() == nullptr){
+        codigos[nodo->getValor()] = camino;
+        return;
     }
 
     generarCodigosRec(nodo->getIzquierdo(), camino + "0", codigos);

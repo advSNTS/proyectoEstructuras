@@ -35,7 +35,58 @@ void Sistema::codificarImagen(std::string nombre){
     for (const auto& par : codigos) {
         std::cout << "Valor: " << par.first << " -> Código: " << par.second << std::endl;
     }
-    
+
+    std::ofstream archivo(nombre, std::ios::binary);
+    if(!archivo.is_open()){
+        std::cout<<"Hubo un error al abrir el archivo.";
+        return;
+    }
+    unsigned short W = this->imagen.getAncho();
+    unsigned short H = this->imagen.getAlto();
+    unsigned char M = this->imagen.getMpixel();
+
+    archivo.write(reinterpret_cast<const char*>(&W), sizeof(W));
+    archivo.write(reinterpret_cast<const char*>(&H), sizeof(H));
+    archivo.write(reinterpret_cast<const char*>(&M), sizeof(M));
+
+    for(int i=0; i<=this->imagen.getMpixel(); i++){
+        unsigned long frecuencia = 0;
+        if(histograma.find(i) != histograma.end()){
+            frecuencia = histograma.at(i);
+        }
+        archivo.write(reinterpret_cast<const char*>(&frecuencia), sizeof(unsigned long));
+    }
+
+
+    std::string cadenaDeBits;
+    for (std::map<int, std::string>::const_iterator it = codigos.begin(); it != codigos.end(); ++it) {
+        cadenaDeBits += it->second;
+    }
+
+    std::vector<unsigned char> bytes;
+    unsigned char actual = 0;
+    int contador = 0;
+
+    for (std::size_t i = 0; i < cadenaDeBits.size(); ++i) {
+        actual <<= 1;
+        if (cadenaDeBits[i] == '1') {
+            actual |= 1;
+        }
+        contador++;
+
+        if (contador == 8) {
+            bytes.push_back(actual);
+            actual = 0;
+            contador = 0;
+        }
+    }
+    if (contador > 0) {
+        actual <<= (8 - contador);
+        bytes.push_back(actual);
+    }
+    archivo.write(reinterpret_cast<const char*>(&bytes[0]), bytes.size());
+
+    archivo.close();
 }
 
 
