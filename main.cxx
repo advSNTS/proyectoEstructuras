@@ -180,7 +180,7 @@ int main(){
                     }
                     else{
                         comando.erase(0, comando.find(' ')+1);
-                        std::cout<<"El archivo '"<<nombreArchivo<<"' ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo '"<<comando<<"'"<<std::endl;
+                        sistema.decodificarImagen(nombreArchivo, comando);
                     }
                 }
             }

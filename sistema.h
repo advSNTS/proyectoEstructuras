@@ -23,6 +23,7 @@ public:
     int aplCriterio(std::vector<int>& valores, std::string criterio);
     void guardarArchivo(std::string nombre, std::vector<std::vector<int>>& imagen);
     void codificarImagen(std::string nombre);
+    void decodificarImagen(std::string archivohuff, std::string nombrepgm);
 };
 
 #endif

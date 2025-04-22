@@ -4,18 +4,20 @@
 #include <sstream>
 #include <map>
 #include <cstdint>
+#include "NodoHuffman.h"
 
 Sistema::Sistema(){
     this->imagenCargada = false;
     this->volumenCargado = false;
 }
 
+
 void Sistema::codificarImagen(std::string nombre){
     if(!this->imagenCargada){
         std::cout<<"No existe una imagen cargada en memoria."<<std::endl;
         return;
     }
-    const std::vector<std::vector<int>> ima = this->imagen.getImagen();
+    const std::vector<std::vector<int>>& ima = this->imagen.getImagen();
     std::map<int, int> histograma;
     for(std::vector<std::vector<int>>::const_iterator it = ima.begin(); it != ima.end(); it++){
         for(std::vector<int>::const_iterator eso = it->begin(); eso!= it->end(); eso++){
@@ -25,6 +27,7 @@ void Sistema::codificarImagen(std::string nombre){
     for (const auto& par : histograma) {
         std::cout << "Valor: " << par.first << " aparece " << par.second << " veces\n";
     }
+
     ArbolHuffman arbolHuffman;
     arbolHuffman.construirDesdeHistograma(histograma);
 
@@ -49,27 +52,38 @@ void Sistema::codificarImagen(std::string nombre){
     archivo.write(reinterpret_cast<const char*>(&H), sizeof(H));
     archivo.write(reinterpret_cast<const char*>(&M), sizeof(M));
 
+
     for(int i=0; i<=this->imagen.getMpixel(); i++){
         unsigned long frecuencia = 0;
-        if(histograma.find(i) != histograma.end()){
+        if(histograma.count(i)){
             frecuencia = histograma.at(i);
         }
         archivo.write(reinterpret_cast<const char*>(&frecuencia), sizeof(unsigned long));
     }
 
-
     std::string cadenaDeBits;
-    for (std::map<int, std::string>::const_iterator it = codigos.begin(); it != codigos.end(); ++it) {
-        cadenaDeBits += it->second;
+    for (const auto& fila : ima) {
+        for (int valorPixel : fila) {
+            if (codigos.count(valorPixel)) {
+                cadenaDeBits += codigos.at(valorPixel);
+            } else {
+                std::cerr << "Error: No se encontró código Huffman para el valor de píxel: " << valorPixel << std::endl;
+                archivo.close(); 
+                return;
+            }
+        }
     }
+
+    unsigned int totalBitsCodificados = cadenaDeBits.length();
+    archivo.write(reinterpret_cast<const char*>(&totalBitsCodificados), sizeof(totalBitsCodificados));
 
     std::vector<unsigned char> bytes;
     unsigned char actual = 0;
     int contador = 0;
 
-    for (std::size_t i = 0; i < cadenaDeBits.size(); ++i) {
+    for (char bit : cadenaDeBits) { 
         actual <<= 1;
-        if (cadenaDeBits[i] == '1') {
+        if (bit == '1') {
             actual |= 1;
         }
         contador++;
@@ -80,13 +94,173 @@ void Sistema::codificarImagen(std::string nombre){
             contador = 0;
         }
     }
+
     if (contador > 0) {
-        actual <<= (8 - contador);
+        actual <<= (8 - contador); 
         bytes.push_back(actual);
     }
-    archivo.write(reinterpret_cast<const char*>(&bytes[0]), bytes.size());
+
+
+    if (!bytes.empty()) {
+         archivo.write(reinterpret_cast<const char*>(&bytes[0]), bytes.size());
+    }
 
     archivo.close();
+    std::cout << "Imagen codificada exitosamente en " << nombre << std::endl; // Mensaje de éxito
+}
+
+void Sistema::decodificarImagen(std::string archivohuff, std::string nombrepgm){
+    std::ifstream archivo(archivohuff, std::ios::binary);
+    if (!archivo.is_open()) {
+        std::cout << "El archivo "<< archivohuff <<" no ha podido ser abierto para decodificar."<< std::endl;
+        return;
+    }
+
+    unsigned short W, H;
+    unsigned char M;
+
+    archivo.read(reinterpret_cast<char*>(&W), sizeof(W));
+    archivo.read(reinterpret_cast<char*>(&H), sizeof(H));
+    archivo.read(reinterpret_cast<char*>(&M), sizeof(M));
+
+    if (!archivo) {
+         std::cout << "Error leyendo la cabecera del archivo " << archivohuff << std::endl;
+         archivo.close();
+         return;
+    }
+
+    std::map<int, int> histograma;
+    for (int i = 0; i <= M; ++i) {
+        unsigned long frecuencia;
+        archivo.read(reinterpret_cast<char*>(&frecuencia), sizeof(unsigned long));
+        if (!archivo) {
+             std::cout << "Error leyendo frecuencias del archivo " << archivohuff << std::endl;
+             archivo.close();
+             return;
+        }
+        if (frecuencia > 0) {
+            histograma[i] = static_cast<int>(frecuencia);
+            if (histograma[i] < 0) {
+                 std::cout << "Advertencia: Frecuencia potencialmente desbordada para el valor " << i << std::endl;
+            }
+        }
+    }
+
+    unsigned int cantidadBits = 0;
+    archivo.read(reinterpret_cast<char*>(&cantidadBits), sizeof(cantidadBits));
+     if (!archivo) {
+         std::cout << "Error leyendo la cantidad de bits del archivo " << archivohuff << std::endl;
+         archivo.close();
+         return;
+     }
+
+    ArbolHuffman arbol;
+    arbol.construirDesdeHistograma(histograma);
+    if (arbol.getRaiz() == nullptr && !histograma.empty()) { 
+         std::cout << "Error: No se pudo construir el árbol de Huffman." << std::endl;
+         archivo.close();
+         return;
+    }
+
+
+    std::vector<unsigned char> bytesCodificados(
+        (std::istreambuf_iterator<char>(archivo)),
+         std::istreambuf_iterator<char>()
+    );
+    archivo.close();
+
+    std::string cadenaBits;
+    cadenaBits.reserve(cantidadBits);
+    int bitsLeidos = 0;
+
+    for (unsigned char byte : bytesCodificados) { 
+        for (int j = 7; j >= 0 && bitsLeidos < cantidadBits; --j) {
+            cadenaBits += ((byte >> j) & 1) ? '1' : '0';
+            bitsLeidos++;
+        }
+        if (bitsLeidos >= cantidadBits) break;
+    }
+
+    if (bitsLeidos < cantidadBits) {
+        std::cout << "Advertencia: Se esperaban " << cantidadBits << " bits, pero solo se pudieron desempaquetar " << bitsLeidos << "." << std::endl;
+    }
+
+
+    std::vector<int> pixeles;
+    int totalPixeles = static_cast<int>(W) * static_cast<int>(H);
+    pixeles.reserve(totalPixeles);
+
+    NodoHuffman* actual = arbol.getRaiz();
+
+    if (actual != nullptr && actual->getIzquierdo() == nullptr && actual->getDerecho() == nullptr) {
+        if (histograma.count(actual->getValor()) && histograma.at(actual->getValor()) == totalPixeles){
+             for(int i=0; i < totalPixeles; ++i) {
+                 pixeles.push_back(actual->getValor());
+             }
+        } else {
+             std::cout << "Error: Imagen con un solo color pero el histograma no coincide." << std::endl;
+             return;
+        }
+
+    } else if (actual != nullptr) { 
+        for (char bit : cadenaBits) {
+            if (bit == '0') {
+                actual = actual->getIzquierdo();
+            } else {
+                actual = actual->getDerecho();
+            }
+
+            if (actual == nullptr) {
+                std::cout << "Error: Se encontró un camino inválido en el árbol de Huffman durante la decodificación." << std::endl;
+                return;
+            }
+
+            if (actual->getIzquierdo() == nullptr && actual->getDerecho() == nullptr) {
+                pixeles.push_back(actual->getValor());
+                actual = arbol.getRaiz();
+
+                if (pixeles.size() == totalPixeles) {
+                    break;
+                }
+            }
+        }
+    } else if (totalPixeles > 0) {
+         std::cout << "Error: Raíz del árbol de Huffman es nula para una imagen no vacía." << std::endl;
+         return;
+    }
+
+
+    if (pixeles.size() != totalPixeles) {
+        std::cout << "Error: Se decodificaron " << pixeles.size() << " píxeles, pero se esperaban " << totalPixeles << "." << std::endl;
+        return;
+    }
+
+    std::ofstream salida(nombrepgm);
+    if (!salida.is_open()) {
+        std::cout << "El archivo "<< nombrepgm <<" no ha podido ser creado para escribir."<< std::endl; // Mejor mensaje
+        return;
+    }
+
+    salida << "P2\n";
+    salida << W << " " << H << "\n";
+    salida << static_cast<int>(M) << "\n";
+
+    int contador_linea = 0;
+    for (int pixel : pixeles) {
+        salida << pixel << " ";
+        contador_linea++;
+        if (contador_linea == W) {
+             salida << "\n";
+             contador_linea = 0;
+        }
+    }
+    if (contador_linea != 0) {
+        salida << "\n";
+    }
+
+
+    salida.close();
+    std::cout << "El archivo " << archivohuff <<" ha sido decodificado exitosamente en "<< nombrepgm << "." << std::endl; // Mensaje más claro
 }
 
 
